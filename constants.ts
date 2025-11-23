@@ -81,8 +81,9 @@ export const PROJECTS: Project[] = [
 export const GAMES: GameRecord[] = [
   { id: 'g1', name: '艾尔登法环', genre: 'RPG', hoursPlayed: 150, rating: 10, status: 'Completed', achievementPercentage: 100 },
   { id: 'g2', name: '星露谷物语', genre: '模拟经营', hoursPlayed: 80, rating: 9, status: 'Playing', achievementPercentage: 60 },
-  { id: 'g3', name: '空洞骑士', genre: '银河恶魔城', hoursPlayed: 45, rating: 9.5, status: 'Completed', achievementPercentage: 90 },
-  { id: 'g4', name: '赛博朋克 2077', genre: 'RPG', hoursPlayed: 60, rating: 8, status: 'Completed', achievementPercentage: 75 },
-  { id: 'g5', name: '蔚蓝 (Celeste)', genre: '平台跳跃', hoursPlayed: 20, rating: 9, status: 'Completed', achievementPercentage: 85 },
+  { id: 'g3', name: '塞尔达传说：旷野之息', genre: 'AVG', hoursPlayed: 45, rating: 9.5, status: 'Completed', achievementPercentage: 90 },
+  { id: 'g4', name: '怪物猎人：世界', genre: 'ARPG', hoursPlayed: 2100, rating: 9.5, status: 'Completed', achievementPercentage: 100 },
+  { id: 'g5', name: '怪物猎人：崛起', genre: 'ARPG', hoursPlayed: 1225, rating: 9, status: 'Completed', achievementPercentage: 100 },
   { id: 'g6', name: '博德之门 3', genre: 'CRPG', hoursPlayed: 200, rating: 10, status: 'Playing', achievementPercentage: 40 },
+  { id: 'g7', name: '怪物猎人：荒野', genre: 'ARPG', hoursPlayed: 525, rating: 7, status: 'Completed', achievementPercentage: 100 },
 ];

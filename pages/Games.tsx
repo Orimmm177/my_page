@@ -14,6 +14,8 @@ const DARK_COLORS = ['#3b82f6', '#d97706', '#22c55e', '#ea580c', '#8b5cf6', '#f4
 const Games: React.FC = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const gamesPerPage = 10;
 
   const statusData = React.useMemo(() => [
     { name: '已通关', value: GAMES.filter(g => g.status === 'Completed').length },
@@ -21,7 +23,13 @@ const Games: React.FC = () => {
     { name: '搁置', value: GAMES.filter(g => g.status === 'Backlog').length },
   ], []);
 
-  const sortedGames = React.useMemo(() => [...GAMES].sort((a, b) => b.hoursPlayed - a.hoursPlayed), []);
+  const sortedGames = React.useMemo(() => [...GAMES].sort((a, b) => b.hoursPlayed - a.hoursPlayed).slice(0, 25), []);
+
+  // 计算分页
+  const totalPages = Math.ceil(GAMES.length / gamesPerPage);
+  const indexOfLastGame = currentPage * gamesPerPage;
+  const indexOfFirstGame = indexOfLastGame - gamesPerPage;
+  const currentGames = GAMES.slice(indexOfFirstGame, indexOfLastGame);
 
   const chartColors = isDark ? DARK_COLORS : COLORS;
   const axisColor = isDark ? '#94a3b8' : '#64748b';
@@ -77,7 +85,7 @@ const Games: React.FC = () => {
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={sortedGames} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                  <XAxis dataKey="name" tick={{ fontSize: 12, fill: axisColor }} interval={0} height={60} tickFormatter={(val) => val.length > 8 ? val.substr(0,8)+'...' : val} />
+                  <XAxis dataKey="name" tick={false} height={20} />
                   <YAxis tick={{ fontSize: 12, fill: axisColor }} />
                   <Tooltip 
                     contentStyle={{ backgroundColor: tooltipBg, color: tooltipText, borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
@@ -136,7 +144,7 @@ const Games: React.FC = () => {
         {/* Detailed List */}
         <div className="space-y-4">
           <h3 className="text-2xl font-serif text-slate-800 dark:text-slate-100 mb-6 pl-2 border-l-4 border-amber-300 dark:border-amber-600">详细列表</h3>
-          {GAMES.map((game) => (
+          {currentGames.map((game) => (
             <motion.div 
               key={game.id}
               initial={{ opacity: 0, y: 10 }}
@@ -181,6 +189,45 @@ const Games: React.FC = () => {
               </div>
             </motion.div>
           ))}
+
+          {/* Pagination Controls */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex items-center justify-center gap-2 mt-8"
+          >
+            <button
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="px-4 py-2 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-700 transition-all"
+            >
+              上一页
+            </button>
+            
+            <div className="flex gap-2">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`w-10 h-10 rounded-lg transition-all ${
+                    currentPage === page 
+                      ? 'bg-amber-400 dark:bg-amber-600 text-white font-bold shadow-md' 
+                      : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-700 transition-all"
+            >
+              下一页
+            </button>
+          </motion.div>
         </div>
       </div>
     </div>
